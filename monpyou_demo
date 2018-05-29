@@ -1,13 +1,15 @@
-#!/usr/bin/python3
+#!/bin/env python3
 """Demo function to show how to use Monpyou."""
 
 from monpyou import MonpYou
+from monpyou.const import __version__
 import argparse
 import logging
 
 
 def main(username: str, password: str):
     """Interaction with the MonpYou class."""
+    print("Monpyou version "+__version__)
     mpy = MonpYou(username, password)
     mpy.update_accounts()
     for account in mpy.accounts:
