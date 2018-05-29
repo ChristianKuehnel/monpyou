@@ -9,7 +9,8 @@ import logging
 def main(username: str, password: str):
     """Interaction with the MonpYou class."""
     mpy = MonpYou(username, password)
-    for account in mpy.get_accounts():
+    mpy.update_accounts()
+    for account in mpy.accounts:
         print("{} ({}): {} {}".format(account.name, account.iban, account.balance, account.currency))
 
 

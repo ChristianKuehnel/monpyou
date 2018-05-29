@@ -1,5 +1,6 @@
 """Simple client for Moneyou accounts."""
-from typing import List
+from typing import List, Dict, Iterable
+from types import FunctionType
 import requests
 from lxml import etree
 from io import StringIO
@@ -25,6 +26,7 @@ class Account(object):
         self.interest_sum = None   # type: float
         self.interest_rate = None  # type: float
         self.currency = None       # type: str
+        self._listeners = []       # type: List[FunctionType]
         self._parse_html(html)
 
     def _parse_html(self, html: etree) -> None:
@@ -40,12 +42,34 @@ class Account(object):
             AMOUNT_SEARCH_PATH.format(2))[0].text)
         self.interest_rate = self._parse_float(panel.xpath(
             AMOUNT_SEARCH_PATH.format(3))[0].text)
+        self._notify_listeners()
 
     @staticmethod
     def _parse_float(text: str) -> float:
         """Parse a float in german notation."""
         text = text.replace('.', '').replace(',', '.')
         return float(text)
+
+    def update_from_account(self, other: "Account") -> None:
+        """Update the data of an account from another account."""
+        if self.iban != other.iban:
+            raise Exception("cannot update from account with different IBAN")
+
+        self.name = other.name
+        self.balance = other.balance
+        self.interest_rate = other.interest_rate
+        self.interest_sum = other.interest_sum
+        self.currency = other.currency
+        self._notify_listeners()
+
+    def _notify_listeners(self):
+        """Notify listeners about an update."""
+        for listener in self._listeners:
+            listener()
+
+    def add_listener(self, callback: FunctionType):
+        """Add a listener for changes to the data."""
+        self._listeners.append(callback)
 
 
 class MonpYou(object):
@@ -58,6 +82,7 @@ class MonpYou(object):
         self._username = username  # type: str
         self._password = password  # type: str
         self._session = None        # type: requests.Session
+        self._accounts = dict()  # type: Dict[str, Account]
 
     def __del__(self):
         """Destructor."""
@@ -87,14 +112,27 @@ class MonpYou(object):
         if response.status_code not in [200, 302]:
             raise Exception('Received error {} from server: \n{}'.format(response.status_code, response.text))
 
-    def get_accounts(self) -> List[Account]:
-        """Get list of accounts."""
+    def update_accounts(self) -> None:
+        """Update list of accounts."""
         _LOGGER.info('Getting account data...')
         response = self.session.get(OVERVIEW_URL)
         if response.status_code != 200:
             raise Exception('Received error {} from server: \n{}'.format(response.status_code, response.text))
         accounts = self._parse_account_html(response.text)
-        return accounts
+        for account in accounts:
+            if account.iban in self._accounts:
+                self._accounts[account.iban].update_from_account(account)
+            else:
+                self._accounts[account.iban] = account
+
+    @property
+    def accounts(self) -> Iterable[Account]:
+        """Get list of accounts."""
+        return self._accounts.values()
+
+    def get_account(self, iban: str) -> Account:
+        """Get account for a give IBAN."""
+        return self._accounts.get(iban)
 
     @staticmethod
     def _parse_account_html(html: str) -> List[Account]:
