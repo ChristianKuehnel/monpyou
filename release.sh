@@ -8,4 +8,4 @@ read -n1 -r -p "Press any key to continue..." key
 
 rm -r dist
 python3 setup.py sdist
-twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+venv/bin/twine upload dist/*

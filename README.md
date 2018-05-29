@@ -1,5 +1,5 @@
 # monpyou
-Pyhton library to read account information from the [moneyou](https://www.moneyou.de/) bank.
+Python library to read account information from the [moneyou](https://www.moneyou.de/) bank.
 
 Right now the library only supports reading the balance of an account.
 
