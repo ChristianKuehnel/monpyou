@@ -17,7 +17,11 @@ for account in mpy.accounts:
 See also [monpyou_demo](monpyou_demo).
 
 # License
-This project is licensed unter the [Apache License Version 2.0](LICENSE).
+Licensed under the Apache License, Version 2.0 (the "License");
+
+you may not use this project except in compliance with the License.
+You may obtain a copy of the License at 
+http://www.apache.org/licenses/LICENSE-2.0
 
 # Disclaimer
 This project is not supported in any way by moneyou. Use it at your own risk!
