@@ -144,9 +144,9 @@ class MonpYou(object):
 
     def logout(self) -> None:
         """Logout from server."""
-        _LOGGER.info('Logging out...')
-        if not self.session:
+        if not self._session:
             return
+        _LOGGER.info('Logging out...')
 
         response = self.session.get(LOGOUT_URL)
         if response.status_code != 200:

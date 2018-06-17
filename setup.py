@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name='monpyou',
-    version='0.1.1',
+    version='0.1.2',
     description='Python library to read account information from moneyou bank.',
     long_description=readme(),
     long_description_content_type='text/markdown',

@@ -12,6 +12,7 @@ def main(username: str, password: str):
     mpy.update_accounts()
     for account in mpy.accounts:
         print("{} ({}): {} {}".format(account.name, account.iban, account.balance, account.currency))
+    mpy.logout()
 
 
 if __name__ == '__main__':
