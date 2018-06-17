@@ -13,7 +13,7 @@ def readme():
 setup(
     name='monpyou',
     version=version,
-    description='Pyhton library to read account information from moneyou bank.',
+    description='Python library to read account information from moneyou bank.',
     long_description=readme(),
     long_description_content_type='text/markdown',
     url='https://github.com/christian.kuehnel/monpyou',
