@@ -1,9 +1,6 @@
 """Python package description."""
 from setuptools import setup, find_packages
 
-from monpyou.const import __version__ as version
-
-
 def readme():
     """Load the readme file."""
     with open('README.md') as readme_file:
@@ -12,7 +9,7 @@ def readme():
 
 setup(
     name='monpyou',
-    version=version,
+    version='0.1.1',
     description='Python library to read account information from moneyou bank.',
     long_description=readme(),
     long_description_content_type='text/markdown',
